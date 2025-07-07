@@ -1,31 +1,51 @@
-
+# Node.js
 node_modules/
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
 
-
-dist/
-build/
-
-
+# Environment variables
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
+# Build outputs
+dist/
+build/
 
+# Logs
 logs/
 *.log
+*.log.*
 
-
+# OS специфичные
 .DS_Store
 Thumbs.db
 
-
+# IDE/editor
 .vscode/
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
+# Miscellaneous
+*.pem
+*.key
 
-.cache/
+# Optional npm cache
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Optional vite cache
+node_modules/.vite/
+
+# Testing
+coverage/

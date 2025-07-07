@@ -6,47 +6,65 @@ import { saveAs } from 'file-saver';
 interface FileTreeProps {
   owner: string;
   repo: string;
+  path?: string;
 }
 
-export const FileTree: React.FC<FileTreeProps> = ({ owner, repo }) => {
+export const FileTree: React.FC<FileTreeProps> = ({ owner, repo, path }) => {
   const [tree, setTree] = useState<GitHubFile[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadRoot = async () => {
       setLoading(true);
-      const files = await fetchRepoContent(owner, repo);
+      const files = await fetchRepoContent(owner, repo, path || '');
       setTree(files);
       setLoading(false);
     };
     loadRoot();
-  }, [owner, repo]);
+  }, [owner, repo, path]);
 
-  const downloadAll = async () => {
+  const downloadFile = async (filePath: string, fileName: string) => {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`);
+      const data = await res.json();
+
+      if (data.content && data.encoding === 'base64') {
+        const decoded = atob(data.content);
+        const blob = new Blob([decoded]);
+        saveAs(blob, fileName);
+      } else {
+        alert('Файл не может быть загружен.');
+      }
+    } catch (err) {
+      alert('Ошибка загрузки файла.');
+    }
+  };
+
+  const downloadFolder = async (folderPath: string, folderName: string) => {
     const zip = new JSZip();
+    const folder = zip.folder(folderName)!;
 
-    const addToZip = async (path: string, folder: JSZip) => {
-      const items = await fetchRepoContent(owner, repo, path);
+    const addToZip = async (subPath: string, zipFolder: JSZip) => {
+      const items = await fetchRepoContent(owner, repo, subPath);
       for (const item of items) {
         if (item.type === 'file') {
           const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${item.path}`);
           const data = await res.json();
-
           if (data.content && data.encoding === 'base64') {
             const decoded = atob(data.content);
             const blob = new Blob([decoded]);
-            folder.file(item.name, blob);
+            zipFolder.file(item.name, blob);
           }
         } else if (item.type === 'dir') {
-          const subFolder = folder.folder(item.name)!;
+          const subFolder = zipFolder.folder(item.name)!;
           await addToZip(item.path, subFolder);
         }
       }
     };
 
-    await addToZip('', zip);
+    await addToZip(folderPath, folder);
     const blob = await zip.generateAsync({ type: 'blob' });
-    saveAs(blob, `${repo}.zip`);
+    saveAs(blob, `${folderName}.zip`);
   };
 
   const renderTree = (files: GitHubFile[], level = 0) => (
@@ -58,15 +76,19 @@ export const FileTree: React.FC<FileTreeProps> = ({ owner, repo }) => {
           style={{ marginLeft: level * 20 }}
         >
           {file.type === 'dir' ? (
-            <strong>📁 {file.name}</strong>
+            <span
+              style={{ fontWeight: 'bold', cursor: 'pointer' }}
+              onClick={() => downloadFolder(file.path, file.name)}
+            >
+              📁 {file.name}
+            </span>
           ) : (
-            <a
-              href={`https://github.com/${owner}/${repo}/blob/main/${file.path}`}
-              target="_blank"
-              rel="noreferrer"
+            <span
+              style={{ cursor: 'pointer', textDecoration: 'underline' }}
+              onClick={() => downloadFile(file.path, file.name)}
             >
               📄 {file.name}
-            </a>
+            </span>
           )}
         </li>
       ))}
@@ -81,7 +103,7 @@ export const FileTree: React.FC<FileTreeProps> = ({ owner, repo }) => {
         <div className="file-container">{renderTree(tree)}</div>
       )}
       {tree.length > 0 && (
-        <button style={{ marginTop: 20 }} onClick={downloadAll}>
+        <button style={{ marginTop: 20 }} onClick={() => downloadFolder(path || '', repo)}>
           Скачать всё в ZIP
         </button>
       )}

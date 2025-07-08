@@ -80,14 +80,14 @@ export const FileTree: React.FC<FileTreeProps> = ({ owner, repo, path }) => {
               style={{ fontWeight: 'bold', cursor: 'pointer' }}
               onClick={() => downloadFolder(file.path, file.name)}
             >
-              📁 {file.name}
+              📂 {file.name}
             </span>
           ) : (
             <span
               style={{ cursor: 'pointer', textDecoration: 'underline' }}
               onClick={() => downloadFile(file.path, file.name)}
             >
-              📄 {file.name}
+              📃 {file.name}
             </span>
           )}
         </li>

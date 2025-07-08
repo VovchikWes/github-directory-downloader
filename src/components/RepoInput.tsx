@@ -15,7 +15,7 @@ export const RepoInput: React.FC<RepoInputProps> = ({ onRepoSubmit }) => {
       const repo = match[2];
       const path = match[3] || '';
       onRepoSubmit(owner, repo, path);
-      setInput(''); // <--- очищаем поле ввода после отправки
+      setInput(''); 
     } else {
       alert('Введите корректную ссылку на GitHub-репозиторий или папку.');
     }
@@ -26,7 +26,7 @@ export const RepoInput: React.FC<RepoInputProps> = ({ onRepoSubmit }) => {
       <input
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="https://github.com/VovchikWes/github-directory-downloader/"
+        placeholder="https://github.com/user/repo или .../tree/main/src"
         style={{
           width: 450,
           fontSize: 20,

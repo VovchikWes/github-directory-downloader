@@ -8,7 +8,7 @@ const App: React.FC = () => {
   return (
     <div>
       <a
-        href="https://github.com/your-username/github-downloader"
+        href="https://github.com/VovchikWes/github-directory-downloader/"
         className="github-corner"
         aria-label="View source on GitHub"
         target="_blank"

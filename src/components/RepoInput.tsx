@@ -22,43 +22,14 @@ export const RepoInput: React.FC<RepoInputProps> = ({ onRepoSubmit }) => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+   <div className="repo-input-container">
       <input
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="https://github.com/user/repo или .../tree/main/src"
-        style={{
-          width: 450,
-          fontSize: 20,
-          padding: '14px 16px',
-          marginRight: 10,
-          borderRadius: 4,
-          border: 'none',
-          outline: 'none',
-          fontWeight: 'bold',
-          color: '#4caf50',
-          backgroundColor: 'white',
-          boxSizing: 'border-box',
-          cursor: 'text',
-          transition: 'background 0.2s ease',
-        }}
+        className="repo-input"
       />
-      <button
-        onClick={handleSubmit}
-        style={{
-          padding: '14px 20px',
-          fontSize: 18,
-          fontWeight: 'bold',
-          borderRadius: 4,
-          border: 'none',
-          backgroundColor: 'white',
-          color: '#4caf50',
-          cursor: 'pointer',
-          transition: 'background 0.2s ease',
-        }}
-        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
-        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'white')}
-      >
+      <button className="hover-highlight" onClick={handleSubmit}>
         Загрузить
       </button>
     </div>

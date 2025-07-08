@@ -26,7 +26,7 @@ export const RepoInput: React.FC<RepoInputProps> = ({ onRepoSubmit }) => {
       <input
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="https://github.com/user/repo или .../tree/main/src"
+        placeholder="https://github.com/VovchikWes/github-directory-downloader/"
         style={{
           width: 450,
           fontSize: 20,
